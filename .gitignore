@@ -1,0 +1,5 @@
+# Ignora todos os arquivos que começam com . (arquivos ocultos)
+.DS_Store
+.idea
+__pycache__/
+
