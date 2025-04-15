@@ -19,7 +19,7 @@ public class ProductResource {
     private ProductService productService;
 
     @GetMapping
-    public ResponseEntity<Page><ProductDTO> findAll(Pageable pageable) {
+    public ResponseEntity<Page<ProductDTO>> findAll(Pageable pageable) {
 
         Page<ProductDTO> products = productService.findAll(pageable);
         return ResponseEntity.ok().body(products);
@@ -29,7 +29,7 @@ public class ProductResource {
     @GetMapping(value = "/{id}")
     public ResponseEntity<ProductDTO> findById(@PathVariable Long id) {
 
-        ProductDTO product = productService.findAll(id);
+        ProductDTO product = productService.findById(id);
         return ResponseEntity.ok().body(product);
 
     }
@@ -41,6 +41,22 @@ public class ProductResource {
         URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(dto.getId()).toUri();
 
         return ResponseEntity.created(uri).body(dto);
+
+    }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<ProductDTO> update(@PathVariable Long id, @RequestBody ProductDTO dto) {
+
+        dto = productService.update(id, dto);
+        return ResponseEntity.ok().body(dto);
+
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+
+        productService.delete(id);
+        return ResponseEntity.noContent().build();
 
     }
 

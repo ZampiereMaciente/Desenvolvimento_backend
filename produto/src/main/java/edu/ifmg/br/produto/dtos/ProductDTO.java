@@ -89,14 +89,6 @@ public class ProductDTO {
         this.imageUrl = imageUrl;
     }
 
-    public Set<Category> getCategories() {
-        return categories;
-    }
-
-    public void setCategories(Set<Category> categories) {
-        this.categories = categories;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof ProductDTO product)) return false;
@@ -119,4 +111,5 @@ public class ProductDTO {
                 ", categories=" + categories +
                 '}';
     }
+
 }

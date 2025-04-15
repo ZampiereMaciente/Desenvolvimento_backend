@@ -1,6 +1,7 @@
 package edu.ifmg.br.produto.services;
 
 import edu.ifmg.br.produto.dtos.ProductDTO;
+import edu.ifmg.br.produto.entities.Category;
 import edu.ifmg.br.produto.entities.Product;
 import edu.ifmg.br.produto.repository.ProductRepository;
 import edu.ifmg.br.produto.services.exceptions.DataBaseException;
@@ -69,7 +70,7 @@ public class ProductService {
     }
 
     @Transactional
-    public void delete(Long id, ProductDTO dto){
+    public void delete(Long id){
 
         if (!productRepository.existsById(id)) {
             throw new ResourceNotFound("Product not found: " + id);
@@ -91,6 +92,7 @@ public class ProductService {
         entity.setPrice(dto.getPrice());
         entity.setImageUrl(dto.getImageUrl());
 
-    }
+        dto.getCategories().forEach(c -> entity.getCategories().add(new Category(c)));
 
+    }
 }
