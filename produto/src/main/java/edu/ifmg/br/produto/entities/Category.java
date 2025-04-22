@@ -7,28 +7,26 @@ import java.time.Instant;
 import java.util.Objects;
 
 @Entity
-@Table(name = "tb_category")
+@Table(name= "tb_category")
 public class Category {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(unique = true)
     private String name;
-
     @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private Instant createdAt;
-    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private Instant updatedAt;
+
+    public Category() {
+    }
 
     public Category(Long id, String name) {
         this.id = id;
         this.name = name;
     }
 
-    public Category() {
-    }
-
-    public Category(CategoryDTO dto){
+    public Category(CategoryDTO dto) {
         this.id = dto.getId();
         this.name = dto.getName();
     }
@@ -57,11 +55,11 @@ public class Category {
         return updatedAt;
     }
 
+
     @PrePersist
     private void prePersist() {
         createdAt = Instant.now();
     }
-
     @PreUpdate
     private void preUpdate() {
         updatedAt = Instant.now();

@@ -2,35 +2,37 @@ package edu.ifmg.br.produto.dtos;
 
 import edu.ifmg.br.produto.entities.Category;
 import edu.ifmg.br.produto.entities.Product;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
+import org.springframework.hateoas.RepresentationModel;
 
-import java.time.Instant;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class ProductDTO {
+public class ProductDTO  extends RepresentationModel<ProductDTO> {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Schema(description = "Database generated ID product")
+    private long id;
+    @Schema(description = "Product name")
     private String name;
+    @Schema(description = "A detailed description of the product")
     private String description;
-    private Double price;
+    @Schema(description = "Product price")
+    private double price;
+    @Schema(description = "Product url of the image")
     private String imageUrl;
-
-
+    @Schema(description = "Product categories (one or more)")
     private Set<CategoryDTO> categories = new HashSet<>();
 
-    public ProductDTO() {}
+    public ProductDTO() {
 
-    public ProductDTO(Long id, String name, String description, Double price, String imageUrl) {
-        this.id = id;
+    }
+    public ProductDTO(String name, String description, double price, String imageUrl) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.imageUrl = imageUrl;
-
     }
 
     public ProductDTO(Product entity) {
@@ -40,20 +42,19 @@ public class ProductDTO {
         this.price = entity.getPrice();
         this.imageUrl = entity.getImageUrl();
 
-        entity.getCategories().stream().forEach(c -> this.categories.add(new CategoryDTO(c)));
-
+        entity.getCategories().forEach(c -> this.categories.add(new CategoryDTO(c)));
     }
 
-    public ProductDTO(Product product, Set<Category> categories){
+    public ProductDTO(Product product, Set<Category> categories) {
         this(product);
-        categories.forEach(c -> this.categories.add(new CategoryDTO(c)));
+        categories.forEach(c-> this.categories.add(new CategoryDTO(c)));
     }
 
-    public Long getId() {
+    public long getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(long id) {
         this.id = id;
     }
 
@@ -73,11 +74,11 @@ public class ProductDTO {
         this.description = description;
     }
 
-    public Double getPrice() {
+    public double getPrice() {
         return price;
     }
 
-    public void setPrice(Double price) {
+    public void setPrice(double price) {
         this.price = price;
     }
 
@@ -89,10 +90,18 @@ public class ProductDTO {
         this.imageUrl = imageUrl;
     }
 
+    public Set<CategoryDTO> getCategories() {
+        return categories;
+    }
+
+    public void setCategories(Set<CategoryDTO> categories) {
+        this.categories = categories;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof ProductDTO product)) return false;
-        return Objects.equals(id, product.id);
+        return id == product.id;
     }
 
     @Override
@@ -111,5 +120,4 @@ public class ProductDTO {
                 ", categories=" + categories +
                 '}';
     }
-
 }

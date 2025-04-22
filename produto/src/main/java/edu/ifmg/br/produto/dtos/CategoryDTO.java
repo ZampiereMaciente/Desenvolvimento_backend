@@ -3,11 +3,17 @@ package edu.ifmg.br.produto.dtos;
 import edu.ifmg.br.produto.entities.Category;
 
 public class CategoryDTO {
-
     private Long id;
+
     private String name;
 
-    public CategoryDTO() {}
+    public CategoryDTO() {
+    }
+
+    public CategoryDTO(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 
     public CategoryDTO(Category entity) {
         this.id = entity.getId();
