@@ -4,7 +4,9 @@ import edu.ifmg.br.produto.dtos.CategoryDTO;
 import jakarta.persistence.*;
 
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name= "tb_category")
@@ -16,7 +18,11 @@ public class Category {
     private String name;
     @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private Instant createdAt;
+    @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private Instant updatedAt;
+
+    @ManyToMany(mappedBy = "categories", fetch = FetchType.LAZY)
+    private Set<Category> products = new HashSet<>();
 
     public Category() {
     }
@@ -55,6 +61,14 @@ public class Category {
         return updatedAt;
     }
 
+
+    public Set<Category> getProducts() {
+        return products;
+    }
+
+    public void setProducts(Set<Category> products) {
+        this.products = products;
+    }
 
     @PrePersist
     private void prePersist() {
