@@ -65,6 +65,22 @@ public class ProductResource {
 
             }
     )
+
+    @GetMapping(produces = "application/json")
+    @Operation(
+            description = "Get all products",
+            summary = "List all registered products",
+            responses = {
+                    @ApiResponse(description = "ok", responseCode = "200"),
+            }
+    )
+    public ResponseEntity<Page<ProductDTO>> findAllPaged(Pageable pageable,
+                                                         (value="categoryId", defaultValue = "0") String categoryId,
+                                                            (Value="name", defaultValue = "")String name) {
+        Page<ProductDTO> products = productService.findAllPaged(name, categoryId, pageable);
+        return ResponseEntity.ok().body(products);
+    }
+
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ResponseEntity<ProductDTO> insert(@Valid @RequestBody ProductDTO dto) {
         dto = productService.insert(dto);
@@ -88,6 +104,7 @@ public class ProductResource {
 
             }
     )
+
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ResponseEntity<ProductDTO> update(@Valid @PathVariable Long id, @RequestBody ProductDTO dto) {
         dto = productService.update(id, dto);
