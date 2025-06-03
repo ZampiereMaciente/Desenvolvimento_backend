@@ -1,6 +1,7 @@
 package br.edu.ifmg.produto.resources;
 
 import br.edu.ifmg.produto.dtos.ProductDTO;
+import br.edu.ifmg.produto.dtos.ProductListDTO;
 import br.edu.ifmg.produto.entities.Product;
 import br.edu.ifmg.produto.services.ProductService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -25,6 +26,24 @@ public class ProductResource {
     @Autowired
     private ProductService productService;
 
+    @GetMapping(value = "/paged", produces = "application/json")
+    @Operation(
+            description = "Get all products paged",
+            summary = "List all registered products paged",
+            responses = {
+                    @ApiResponse(description = "ok", responseCode = "200"),
+            }
+    )
+    public ResponseEntity<Page<ProductListDTO>> findAllPaged (
+            Pageable pageable,
+            @RequestParam(value = "categoryId", defaultValue = "0") String categoryId,
+            @RequestParam(value="name", defaultValue = "") String name
+    ) {
+        Page<ProductListDTO> products = productService.findAllPaged(pageable, categoryId, name);
+        return ResponseEntity.ok().body(products);
+    }
+
+
     @GetMapping(produces = "application/json")
     @Operation(
             description = "Get all products",
@@ -37,6 +56,10 @@ public class ProductResource {
         Page<ProductDTO> products = productService.findAll(pageable);
         return ResponseEntity.ok().body(products);
     }
+
+
+
+
 
     @GetMapping(value = "/{id}", produces = "application/json")
     @Operation(
@@ -65,22 +88,6 @@ public class ProductResource {
 
             }
     )
-
-    @GetMapping(produces = "application/json")
-    @Operation(
-            description = "Get all products",
-            summary = "List all registered products",
-            responses = {
-                    @ApiResponse(description = "ok", responseCode = "200"),
-            }
-    )
-    public ResponseEntity<Page<ProductDTO>> findAllPaged(Pageable pageable,
-                                                         (value="categoryId", defaultValue = "0") String categoryId,
-                                                            (Value="name", defaultValue = "")String name) {
-        Page<ProductDTO> products = productService.findAllPaged(name, categoryId, pageable);
-        return ResponseEntity.ok().body(products);
-    }
-
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_OPERATOR')")
     public ResponseEntity<ProductDTO> insert(@Valid @RequestBody ProductDTO dto) {
         dto = productService.insert(dto);
@@ -104,9 +111,8 @@ public class ProductResource {
 
             }
     )
-
     @PreAuthorize("hasAnyAuthority('ROLE_ADMIN', 'ROLE_OPERATOR')")
-    public ResponseEntity<ProductDTO> update(@Valid @PathVariable Long id, @RequestBody ProductDTO dto) {
+    public ResponseEntity<ProductDTO> update(@PathVariable Long id, @Valid @RequestBody ProductDTO dto) {
         dto = productService.update(id, dto);
         return ResponseEntity.ok().body(dto);
     }
