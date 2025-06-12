@@ -1,0 +1,7 @@
+CREATE TABLE 'tb_password_recover' (
+    'id' BIGINT NOT NULL AUTOINCREMENT,
+    'token' VARCHAR(100) NOT NULL,
+    'email' VARCHAR(100) NOT NULL,
+    'expitation' TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY
+);
